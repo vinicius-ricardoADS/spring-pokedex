@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pokemon.springapi.entity.Pokemon;
+import br.com.pokemon.springapi.entity.PokemonRequestDTO;
+import br.com.pokemon.springapi.entity.PokemonResponseDTO;
 import br.com.pokemon.springapi.service.PokemonService;
 
 @RestController
@@ -25,8 +27,8 @@ public class PokemonController {
     private PokemonService pokemonService;
 
     @GetMapping
-    public ResponseEntity<List<Pokemon>> getAllPokemons() {
-        List<Pokemon> pokemons = pokemonService.findAll();
+    public ResponseEntity<List<PokemonResponseDTO>> getAllPokemons() {
+        List<PokemonResponseDTO> pokemons = pokemonService.findAll();
         return new ResponseEntity<>(pokemons, HttpStatus.OK);
     }
 
@@ -39,8 +41,8 @@ public class PokemonController {
     }
 
     @PostMapping
-    public ResponseEntity<Pokemon> createPokemon(@RequestBody Pokemon pokemon) {
-        Pokemon createdPokemon = pokemonService.save(pokemon);
+    public ResponseEntity<Pokemon> createPokemon(@RequestBody PokemonRequestDTO pokemonRequestDTO) {
+        Pokemon createdPokemon = new Pokemon(pokemonRequestDTO);
         return new ResponseEntity<>(createdPokemon, HttpStatus.OK);
     }
 

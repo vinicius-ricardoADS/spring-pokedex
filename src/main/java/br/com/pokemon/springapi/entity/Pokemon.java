@@ -10,9 +10,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "pokemons")
+@NoArgsConstructor
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode(of = { "id", "name" })
 public class Pokemon {
 
     @Id
@@ -46,6 +54,17 @@ public class Pokemon {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    public Pokemon(PokemonRequestDTO pokemonRequestDTO) {
+        this.name = pokemonRequestDTO.name();
+        this.type = pokemonRequestDTO.types();
+        this.weaknesses = pokemonRequestDTO.weaknesses();
+        this.height = pokemonRequestDTO.height();
+        this.weight = pokemonRequestDTO.weight();
+        this.category = pokemonRequestDTO.category();
+        this.abillities = pokemonRequestDTO.abillities();
+        this.gender = pokemonRequestDTO.gender();
+    }
+
     public void setPokemon(Pokemon pokemonDetails) {
         this.abillities = pokemonDetails.getAbillities();
         this.name = pokemonDetails.getName();
@@ -57,115 +76,39 @@ public class Pokemon {
         this.gender = pokemonDetails.getGender();
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public List<Type> getType() {
-        return type;
-    }
-
     public void setType(List<Type> type) {
         this.type = type;
-    }
-
-    public List<Type> getWeaknesses() {
-        return weaknesses;
     }
 
     public void setWeaknesses(List<Type> weaknesses) {
         this.weaknesses = weaknesses;
     }
 
-    public double getHeight() {
-        return height;
-    }
-
     public void setHeight(double height) {
         this.height = height;
-    }
-
-    public double getWeight() {
-        return weight;
     }
 
     public void setWeight(double weight) {
         this.weight = weight;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public String getAbillities() {
-        return abillities;
     }
 
     public void setAbillities(String abillities) {
         this.abillities = abillities;
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
     public void setGender(Gender gender) {
         this.gender = gender;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        result = prime * result + ((gender == null) ? 0 : gender.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Pokemon other = (Pokemon) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (type == null) {
-            if (other.type != null)
-                return false;
-        } else if (!type.equals(other.type))
-            return false;
-        if (gender != other.gender)
-            return false;
-        return true;
     }
 }

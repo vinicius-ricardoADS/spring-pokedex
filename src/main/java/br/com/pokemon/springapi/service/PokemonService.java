@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.pokemon.springapi.dao.RepositoryDAO;
 import br.com.pokemon.springapi.entity.Pokemon;
+import br.com.pokemon.springapi.entity.PokemonResponseDTO;
 
 @Service
 public class PokemonService {
@@ -39,7 +40,7 @@ public class PokemonService {
         repositoryDAO.deleteById(id);
     }
 
-    public List<Pokemon> findAll() {
-        return repositoryDAO.findAll();
+    public List<PokemonResponseDTO> findAll() {
+        return repositoryDAO.findAll().stream().map(PokemonResponseDTO::new).toList();
     }
 }
