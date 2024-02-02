@@ -2,13 +2,16 @@ package br.com.pokemon.springapi.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -30,12 +33,14 @@ public class Pokemon {
     @Column(nullable = false, length = 10, unique = true)
     private String name;
 
-    @Column(nullable = false, length = 2)
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @ElementCollection
+    @CollectionTable(name = "pokemon_types", joinColumns = @JoinColumn(name = "pokemon_id"))
     private List<Type> type;
 
-    @Column(nullable = false, length = 2)
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @ElementCollection
+    @CollectionTable(name = "pokemon_weaknesses", joinColumns = @JoinColumn(name = "pokemon_id"))
     private List<Type> weaknesses;
 
     @Column(nullable = false)
@@ -56,7 +61,7 @@ public class Pokemon {
 
     public Pokemon(PokemonRequestDTO pokemonRequestDTO) {
         this.name = pokemonRequestDTO.name();
-        this.type = pokemonRequestDTO.types();
+        this.type = pokemonRequestDTO.type();
         this.weaknesses = pokemonRequestDTO.weaknesses();
         this.height = pokemonRequestDTO.height();
         this.weight = pokemonRequestDTO.weight();

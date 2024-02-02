@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import br.com.pokemon.springapi.service.PokemonService;
 
 @RestController
 @RequestMapping("/api/pokemons")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PokemonController {
 
     @Autowired
@@ -43,6 +45,7 @@ public class PokemonController {
     @PostMapping
     public ResponseEntity<Pokemon> createPokemon(@RequestBody PokemonRequestDTO pokemonRequestDTO) {
         Pokemon createdPokemon = new Pokemon(pokemonRequestDTO);
+        pokemonService.save(createdPokemon);
         return new ResponseEntity<>(createdPokemon, HttpStatus.OK);
     }
 
