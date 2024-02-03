@@ -6,12 +6,11 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -24,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode(of = { "id", "name" })
+@SequenceGenerator(name = "pokemon_sequence", initialValue = 1)
 public class Pokemon {
 
     @Id
@@ -55,9 +55,10 @@ public class Pokemon {
     @Column(nullable = false, length = 10)
     private String abillities;
 
-    @Column(nullable = false, length = 1)
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    @Column(nullable = false)
+    @ElementCollection
+    @CollectionTable(name = "pokemon_gender", joinColumns = @JoinColumn(name = "pokemon_id"))
+    private List<Gender> genders;
 
     public Pokemon(PokemonRequestDTO pokemonRequestDTO) {
         this.name = pokemonRequestDTO.name();
@@ -67,7 +68,7 @@ public class Pokemon {
         this.weight = pokemonRequestDTO.weight();
         this.category = pokemonRequestDTO.category();
         this.abillities = pokemonRequestDTO.abillities();
-        this.gender = pokemonRequestDTO.gender();
+        this.genders = pokemonRequestDTO.gender();
     }
 
     public void setPokemon(Pokemon pokemonDetails) {
@@ -78,7 +79,7 @@ public class Pokemon {
         this.height = pokemonDetails.getHeight();
         this.weight = pokemonDetails.getHeight();
         this.category = pokemonDetails.getCategory();
-        this.gender = pokemonDetails.getGender();
+        this.genders = pokemonDetails.getGenders();
     }
 
     public void setId(Long id) {
@@ -113,7 +114,7 @@ public class Pokemon {
         this.abillities = abillities;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setGender(List<Gender> gender) {
+        this.genders = gender;
     }
 }

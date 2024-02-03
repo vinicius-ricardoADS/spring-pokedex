@@ -1,6 +1,7 @@
 package br.com.pokemon.springapi.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,11 +36,28 @@ public class PokemonController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pokemon> getPokemonById(@PathVariable("id") Long id) {
+    public ResponseEntity<PokemonResponseDTO> getPokemonById(@PathVariable("id") Long id) {
         Pokemon pokemon = pokemonService.findById(id);
-        if (pokemon != null)
-            return new ResponseEntity<>(pokemon, HttpStatus.OK);
+        if (pokemon != null) {
+            PokemonResponseDTO pokemonResponseDTO = new PokemonResponseDTO(pokemon);
+            return new ResponseEntity<>(pokemonResponseDTO, HttpStatus.OK);
+        }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/found/{name}")
+    public ResponseEntity<PokemonResponseDTO> getPokemonByName(@PathVariable("name") String name) {
+        List<PokemonResponseDTO> pokemons = pokemonService.findAll();
+
+        Optional<PokemonResponseDTO> pokemon = pokemons.stream()
+                .filter(p -> p.name().equals(name))
+                .findFirst();
+
+        if (pokemon.isPresent()) {
+            return new ResponseEntity<>(pokemon.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping
