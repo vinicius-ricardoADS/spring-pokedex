@@ -2,6 +2,7 @@ package br.com.pokemon.springapi.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class PokemonController {
         return new ResponseEntity<>(pokemons, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<PokemonResponseDTO> getPokemonById(@PathVariable("id") Long id) {
         Pokemon pokemon = pokemonService.findById(id);
         if (pokemon != null) {
@@ -45,7 +46,7 @@ public class PokemonController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/found/{name}")
+    @GetMapping("/name/{name}")
     public ResponseEntity<PokemonResponseDTO> getPokemonByName(@PathVariable("name") String name) {
         List<PokemonResponseDTO> pokemons = pokemonService.findAll();
 
@@ -55,6 +56,21 @@ public class PokemonController {
 
         if (pokemon.isPresent()) {
             return new ResponseEntity<>(pokemon.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/types/{type}")
+    public ResponseEntity<List<PokemonResponseDTO>> getPokemonByType(@PathVariable("type") String type) {
+        List<PokemonResponseDTO> pokemons = pokemonService.findAll();
+
+        List<PokemonResponseDTO> pokemonsType = pokemons.stream()
+                .filter(p -> p.types().stream().anyMatch(t -> t.getAcronym().equals(type)))
+                .collect(Collectors.toList());
+
+        if (pokemonsType.size() > 0) {
+            return new ResponseEntity<>(pokemonsType, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
